@@ -14,5 +14,5 @@ I thank [Flexbox Froggy](https://flexboxfroggy.com/) for teaching me how to use 
 * System prompt: The instructions given for the model to follow.
    * Example: You are a helpful assistant.
 * Your message: The query you decide to use.
-   * Example: Is "dog" or "cat" the subject of the sentence, "The dog walked in the park."?
+   * Example: Is "dog" or "park" the subject of the sentence, "The dog walked in the park."?
 * Response from GPT-5 Mini: The model's output.
