@@ -21,7 +21,7 @@ messages.addEventListener("submit", async function(event) {
                 "content-type": "application/json"
             },
             method: "POST",
-            body: JSON.stringify({model: "openai/gpt-5-mini-2025-08-07", messages: arr})
+            body: JSON.stringify({model: "openai/gpt-5-mini", messages: arr})
         }
     );
     try {
