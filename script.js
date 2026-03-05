@@ -27,9 +27,9 @@ messages.addEventListener("submit", async function(event) {
     try {
         const json = await response.json();
         // in case a future model has a name with two slashes
-        document.querySelector("#model").innerText = `The current model is: ${json.data.model.split(/\//)[1]}`;
-        if (json.success) {
-            messages.assistant.value = json?.data?.choices[0]?.message?.content;
+        document.querySelector("#model").innerText = `The current model is: ${json.model.split(/\//)[1]}`;
+        if (json) {
+            messages.assistant.value = json?.choices[0]?.message?.content;
             messages.assistant.placeholder = "If you see this, the AI returned a blank response";
         } else {
             throw new SyntaxError("success is missing or not true");
