@@ -1,45 +1,32 @@
 <?php
 require_once('../auth/bearer.php');
-// Read the raw JSON body sent to your original PHP endpoint
-$rawBody = file_get_contents('php://input');
+while (ob_get_level()) ob_end_flush();
+ob_implicit_flush(true);
 
-if ($rawBody === false) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Failed to read request body']);
-    exit;
-}
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+header('Connection: keep-alive');
+header('X-Accel-Buffering: no');
 
-// Initialize cURL to the Hack Club AI proxy endpoint
+$body = file_get_contents('php://input');
+
 $ch = curl_init('https://ai.hackclub.com/proxy/v1/chat/completions');
 
 curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $body,
     CURLOPT_HTTPHEADER => [
-        "Authorization: Bearer $HACKCLUB_AI_API_KEY",
+        "Authorization: Bearer $HACK_CLUB_AI_API_KEY",
         'Content-Type: application/json'
     ],
-    CURLOPT_POSTFIELDS => $rawBody,
-    CURLOPT_TIMEOUT => 30,
+    CURLOPT_WRITEFUNCTION => function ($ch, $data) {
+        echo $data;
+        flush();
+        return strlen($data);
+    },
 ]);
 
-$response = curl_exec($ch);
-
-if ($response === false) {
-    http_response_code(502);
-    echo json_encode([
-        'error' => 'Upstream request failed',
-        'details' => curl_error($ch)
-    ]);
-    curl_close($ch);
-    exit;
-}
-
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_exec($ch);
 curl_close($ch);
 
-// Forward upstream status code and response
-http_response_code($httpCode);
-header('Content-Type: application/json');
-echo $response;
 ?>

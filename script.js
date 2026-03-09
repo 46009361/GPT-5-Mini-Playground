@@ -15,24 +15,53 @@ messages.addEventListener("submit", async function(event) {
             arr.push(obj);
         }
     });
-    const response = await fetch("/letschat/",
+    const response = await fetch("./letschat/",
         {
             headers: {
                 "content-type": "application/json"
             },
             method: "POST",
-            body: JSON.stringify({model: "openai/gpt-5-mini", messages: arr})
+            body: JSON.stringify({model: "openai/gpt-5-mini", messages: arr, stream: true})
         }
     );
     try {
-        const json = await response.json();
-        // in case a future model has a name with two slashes
-        document.querySelector("#model").innerText = `The current model is: ${json.model.split(/\//)[1]}`;
-        if (json) {
-            messages.assistant.value = json?.choices[0]?.message?.content;
-            messages.assistant.placeholder = "If you see this, the AI returned a blank response";
-        } else {
-            throw new SyntaxError("success is missing or not true");
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        let buffer = "";
+        messages.assistant.value = "";
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+
+            const lines = buffer.split("\n");
+            buffer = lines.pop();
+
+            for (const line of lines) {
+                if (!line.startsWith("data:")) continue;
+
+                const jsonStr = line.slice(5).trim();
+                if (jsonStr === "[DONE]") continue;
+
+                let json;
+                try {
+                    json = JSON.parse(jsonStr);
+                }
+                catch {
+                    continue;
+                }
+                if (json.model && !document.querySelector("#model").innerText) {
+                    document.querySelector("#model").innerText =
+                        `The current model is: ${json.model.split(/\//)[1]}`;
+                }
+                const token = json?.choices?.[0]?.delta?.content;
+                if (token) {
+                    messages.assistant.value += token;
+                }
+            }
         }
     }
     catch (error) {
