@@ -28,7 +28,7 @@ I thank [Flexbox Froggy](https://flexboxfroggy.com/) for teaching me how to use 
 4. Within that folder, add a `bearer.php` file with the following contents (an environment variable is recommended):
    ```php
    <?php
-   $HACKCLUB_AI_API_KEY = 'YOUR_API_KEY'
+   $HACK_CLUB_AI_API_KEY = 'YOUR_API_KEY'
    ?>
    ```
 5. Deploy on a server supporting PHP
