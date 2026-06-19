@@ -1,5 +1,3 @@
-// test commit
-
 const messages = document.forms.messages;
 messages.addEventListener("submit", async function(event) {
     event.preventDefault();

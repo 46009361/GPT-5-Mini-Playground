@@ -1,5 +1,6 @@
 <?php
-require_once('../auth/bearer.php');
+require_once('../config.php');
+$API_KEY = HACK_CLUB_AI_API_KEY;
 while (ob_get_level()) ob_end_flush();
 ob_implicit_flush(true);
 
@@ -16,7 +17,7 @@ curl_setopt_array($ch, [
     CURLOPT_POST => true,
     CURLOPT_POSTFIELDS => $body,
     CURLOPT_HTTPHEADER => [
-        "Authorization: Bearer $HACK_CLUB_AI_API_KEY",
+        "Authorization: Bearer $API_KEY",
         'Content-Type: application/json'
     ],
     CURLOPT_WRITEFUNCTION => function ($ch, $data) {

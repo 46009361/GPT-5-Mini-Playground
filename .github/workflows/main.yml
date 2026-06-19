@@ -1,0 +1,32 @@
+on: push
+name: 🚀 Deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create config.php
+      run: |
+        cat << 'EOF' > config.php
+        <?php
+        define('HACK_CLUB_AI_API_KEY', '${{ secrets.API_KEY }}');
+        ?>
+        EOF
+
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v6
+    
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+      with:
+        server: ftpupload.net
+        username: if0_40883556
+        password: ${{ secrets.ftp_password }}
+        protocol: ftps
+        server-dir: delulu.bond/htdocs/
+        dry-run: true
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/config.example.php**

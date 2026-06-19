@@ -7,7 +7,7 @@ Test GPT-5 Mini! GPT-5 Mini is a compact version of GPT-5, designed to handle li
 
 This is a large language model that "thinks" for a while, so please expect slower responses.
 
-I thank [Flexbox Froggy](https://flexboxfroggy.com/) for teaching me how to use CSS flex.
+I thank [Flexbox Froggy](https://flexboxfroggy.com/) for teaching me how to use CSS flex and Sam Kirkland for the GitHub Actions workflow [FTP Deploy](SamKirkland/FTP-Deploy-Action).
 
 ## Input fields
 
@@ -19,17 +19,14 @@ I thank [Flexbox Froggy](https://flexboxfroggy.com/) for teaching me how to use 
 
 ## Hosting locally
 
-1. Create an API key on [Hack Club AI](https://ai.hackclub.com/) and copy it
-2. Clone the repo:
-   ```sh
+1. Clone the repo:
+   ```zsh
    git clone https://github.com/46009361/GPT-5-Mini-Playground.git
+   cd GPT-5-Mini-Playground
+   mv config.example.php config.php
+   xdg-open config.php
    ```
-3. In the root folder, add another folder called `auth`
-4. Within that folder, add a `bearer.php` file with the following contents (an environment variable is recommended):
-   ```php
-   <?php
-   $HACK_CLUB_AI_API_KEY = 'YOUR_API_KEY'
-   ?>
-   ```
-5. Deploy on a server supporting PHP
-6. Done!
+2. When your default code editor or other graphical text editor opens, create an API key on [Hack Club AI](https://ai.hackclub.com/) and copy it
+3. Paste it into the respective field; if you're not sure, the code comment should tell you
+4. Deploy on a server supporting PHP
+5. Done!
