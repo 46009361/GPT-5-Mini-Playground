@@ -5,13 +5,23 @@ jobs:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Force-stage config.php for git-ftp
-      run: git add -f config.php
-
-
     - name: 🚚 Get latest code
       uses: actions/checkout@v6
-    
+
+    - name: Force-stage config.php for git-ftp
+      run: mv config.example.php config.php
+
+    # 3. Swap placeholders with your real repository secrets
+    - name: 🔐 Inject Secrets into config.php
+      run: |
+        sed -i "s/Paste your API key here/${{ secrets.API_KEY }}/g" config.php
+
+    # 4. Tell Git to track the deletion of the example and addition of the new config
+    - name: 💾 Sync Git state for a lean deploy
+      run: |
+        git rm config.example.php
+        git add -f config.php
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.4.0
       with:
@@ -20,8 +30,3 @@ jobs:
         password: ${{ secrets.ftp_password }}
         protocol: ftps
         server-dir: delulu.bond/htdocs/
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/node_modules/**
-          **/config.example.php**
