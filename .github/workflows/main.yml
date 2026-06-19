@@ -5,13 +5,9 @@ jobs:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Create config.php
-      run: |
-        cat << 'EOF' > config.php
-        <?php
-        define('HACK_CLUB_AI_API_KEY', '${{ secrets.API_KEY }}');
-        ?>
-        EOF
+    - name: Force-stage config.php for git-ftp
+      run: git add -f config.php
+
 
     - name: 🚚 Get latest code
       uses: actions/checkout@v6
@@ -29,4 +25,3 @@ jobs:
           **/.git*/**
           **/node_modules/**
           **/config.example.php**
-        git-ftp-args: --force
